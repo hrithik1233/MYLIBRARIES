@@ -1,4 +1,5 @@
 
+
 import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
@@ -101,6 +102,8 @@ private   Thread thread;
                             if (!Thread.interrupted()) {
                                 Thread.sleep(1000);
                             }
+                        }else{
+                            break;
                         }
                     }
                     isCounting = false;
