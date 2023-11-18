@@ -1,19 +1,12 @@
 
 
-import android.annotation.SuppressLint;
 import android.os.Handler;
 import android.os.Looper;
-import android.util.Log;
-
 import java.util.PriorityQueue;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.atomic.AtomicBoolean;
+
 
 interface SecondsCounterInterface {
     void updateTimeFormatSecondsCounter(long hour, long minute, long second);
-
-    void updateStringFormatSecondsCounter(String timeStamp);
 
     void totalSecondsCounter(long totalSeconds);
 
@@ -85,10 +78,8 @@ private   Thread thread;
                             min %= 60;
                             mainHandler.post(() -> {
                                 if (counterInterface != null && callInterface) {
-                                    counterInterface.updateStringFormatSecondsCounter(getToStringFormat());
                                     counterInterface.updateTimeFormatSecondsCounter(hr, min, sec);
                                     counterInterface.totalSecondsCounter(getTotalSeconds());
-                                    Log.i("count","coutning");
                                     if (!queue.isEmpty()) {
                                         TimeQueueSecondCounter time = queue.peek();
                                         if (time.hr <= hr && time.min <= min && time.sec <= sec) {
@@ -136,14 +127,12 @@ private   Thread thread;
         sec = 0;
 
         if (counterInterface != null) {
-            counterInterface.updateStringFormatSecondsCounter(getToStringFormat());
             counterInterface.updateTimeFormatSecondsCounter(hr, min, sec);
             counterInterface.totalSecondsCounter(getTotalSeconds());
         }
     }
 
     public void stop() {
-        Log.i("count","coutning stoped");
         thread.interrupt();
         isPause = false;
         isCounting = false;
@@ -165,11 +154,7 @@ private   Thread thread;
     public long getSeconds() {
         return sec;
     }
-
-    @SuppressLint("DefaultLocale")
-    public String getToStringFormat() {
-        return String.format("%02d:%02d:%02d", hr, min, sec);
-    }
+    
 
     public long getTotalSeconds() {
         return (hr * 60 * 60) + (min * 60) + sec;
@@ -182,13 +167,26 @@ private   Thread thread;
     public void setHr(long hr) {
 
         this.hr = hr;
+        if(isCounting){
+            thread.interrupt();
+            start();
+        }
+       
     }
 
     public void setMin(long min) {
         this.min = min;
+        if(isCounting){
+            thread.interrupt();
+            start();
+        }
     }
 
     public void setSec(long sec) {
         this.sec = sec;
+        if(isCounting){
+            thread.interrupt();
+            start();
+        }
     }
 }
