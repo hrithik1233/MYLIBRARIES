@@ -1,4 +1,3 @@
-package com.example.chatbotproject;
 
 import android.annotation.SuppressLint;
 import android.os.Handler;
